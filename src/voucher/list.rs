@@ -45,7 +45,7 @@ impl<'a> VoucherListRequest<'a> {
         self
     }
 
-    pub fn send(&self) -> Vec<Voucher> {
+    pub fn send(&self) -> Result<Vec<Voucher>, String> {
         let mut url = Url::parse("https://api.voucherify.io/v1/vouchers").unwrap();
         url.query_pairs_mut()
             .clear()
@@ -60,11 +60,20 @@ impl<'a> VoucherListRequest<'a> {
             url.query_pairs_mut().append_pair("campaign", self.campaign.as_str());
         }
 
-        let mut response = self.request.execute(url);
+        let mut response = match self.request.execute(url) {
+            Ok(r) => r,
+            Err(err) => return Err(err.to_string()),
+        };
 
         let mut json = String::new();
-        response.read_to_string(&mut json);
+        match response.read_to_string(&mut json) {
+            Err(_) => return Err("Failed to read JSON from response".to_string()),
+            Ok(_) => (),
+        };
 
-        serde_json::from_str(json.as_str()).unwrap()
+        match serde_json::from_str(json.as_str()) {
+            Ok(vouchers) => Ok(vouchers),
+            Err(_) => Err("Faile to parse JSON".to_string())
+        }
     }
 }

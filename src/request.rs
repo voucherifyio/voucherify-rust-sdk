@@ -1,5 +1,5 @@
 use hyper::client::{Client, Response};
-use hyper::Url;
+use hyper::{Url, Error};
 use hyper::net::HttpsConnector;
 use hyper::header::Headers;
 use hyper_native_tls::NativeTlsClient;
@@ -26,7 +26,7 @@ impl VoucherifyRequest {
         }
     }
 
-    pub fn execute(&self, url: Url) -> Response {
-        self.client.get(url).headers(self.headers.clone()).send().unwrap()
+    pub fn execute(&self, url: Url) -> Result<Response, Error> {
+        self.client.get(url).headers(self.headers.clone()).send()
     }
 }
