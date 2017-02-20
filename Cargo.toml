@@ -1,0 +1,11 @@
+[package]
+name = "voucherify_rs"
+version = "0.1.0"
+authors = ["Mateusz 'Haggus' Mrowiec <matt.mrowiec@gmail.com>"]
+
+[dependencies]
+hyper = "0.10.4"
+hyper-native-tls = "0.2.2"
+serde = "0.9"
+serde_derive = "0.9"
+serde_json = "0.9"
