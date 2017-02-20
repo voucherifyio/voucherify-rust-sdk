@@ -68,5 +68,3 @@ impl<'a> VoucherListRequest<'a> {
         serde_json::from_str(json.as_str()).unwrap()
     }
 }
-
-

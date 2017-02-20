@@ -1,9 +1,10 @@
+pub mod get;
 pub mod list;
 
 #[derive(Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
 pub struct Voucher {
-    object: String,
-    created_at: String,
+    object: Option<String>,
+    created_at: Option<String>,
     code: String,
     campaign: String,
      #[serde(rename = "type")]
