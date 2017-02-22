@@ -1,5 +1,6 @@
 pub mod create;
 pub mod get;
+pub mod update;
 pub mod list;
 
 #[derive(Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
@@ -8,12 +9,16 @@ pub struct Voucher {
     created_at: Option<String>,
     code: Option<String>,
     campaign: Option<String>,
+    category: Option<String>,
      #[serde(rename = "type")]
     voucher_type: Option<VoucherType>,
     is_referral_code: Option<bool>,
+    start_date: Option<String>,
+    expiration_date: Option<String>,
     publish: Option<Publish>,
     redemption: Option<Redemption>,
     active: Option<bool>,
+    additional_info: Option<String>,
     metadata: Option<Metadata>,
     discount: Option<Discount>,
     gift: Option<Gift>,
@@ -28,11 +33,15 @@ impl Voucher {
             created_at: None,
             code: None,
             campaign: None,
+            category: None,
             voucher_type: None,
             is_referral_code: None,
+            start_date: None,
+            expiration_date: None,
             publish: None,
             redemption: None,
             active: None,
+            additional_info: None,
             metadata: None,
             discount: None,
             gift: None,
@@ -41,8 +50,28 @@ impl Voucher {
         }
     }
 
+    pub fn code(mut self, code: String) -> Voucher {
+        self.code = Some(code);
+        self
+    }
+
+    pub fn category(mut self, category: String) -> Voucher {
+        self.category = Some(category);
+        self
+    }
+
     pub fn voucher_type(mut self, voucher_type: VoucherType) -> Voucher {
         self.voucher_type = Some(voucher_type);
+        self
+    }
+
+    pub fn start_date(mut self, start_date: String) -> Voucher {
+        self.start_date = Some(start_date);
+        self
+    }
+
+    pub fn expiration_date(mut self, expiration_date: String) -> Voucher {
+        self.expiration_date = Some(expiration_date);
         self
     }
 

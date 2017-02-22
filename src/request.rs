@@ -44,6 +44,12 @@ impl VoucherifyRequest {
         self
     }
 
+    pub fn put(&mut self, url: Url) -> &mut VoucherifyRequest {
+        self.method = Method::Put;
+        self.url = url;
+        self
+    }
+
     pub fn payload(&mut self, payload: String) -> &mut VoucherifyRequest {
         self.payload = payload;
         self
@@ -62,6 +68,12 @@ impl VoucherifyRequest {
                            .headers(self.headers.clone())
                            .send()
             },
+            Method::Put => {
+                self.client.put(self.url.clone())
+                           .body(self.payload.as_str())
+                           .headers(self.headers.clone())
+                           .send()
+            },
         }
     }
 }
@@ -69,4 +81,5 @@ impl VoucherifyRequest {
 enum Method {
     Get,
     Post,
+    Put,
 }

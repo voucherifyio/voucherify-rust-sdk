@@ -11,6 +11,7 @@ pub mod voucher;
 use request::VoucherifyRequest;
 use voucher::create::VoucherCreateRequest;
 use voucher::get::VoucherGetRequest;
+use voucher::update::VoucherUpdateRequest;
 use voucher::list::VoucherListRequest;
 use voucher::Voucher;
 
@@ -35,6 +36,11 @@ impl Voucherify {
     pub fn voucher_get(&self, voucher_id: &str) -> VoucherGetRequest {
         let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
         VoucherGetRequest::new(new_request, voucher_id)
+    }
+
+    pub fn voucher_update(&self, voucher_id: &str) -> VoucherUpdateRequest {
+        let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
+        VoucherUpdateRequest::new(new_request, voucher_id)
     }
 
     pub fn voucher_list(&self) -> VoucherListRequest {
