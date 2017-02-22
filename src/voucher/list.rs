@@ -5,8 +5,8 @@ use serde_json;
 use request::VoucherifyRequest;
 use voucher::Voucher;
 
-pub struct VoucherListRequest<'a> {
-    request: &'a VoucherifyRequest,
+pub struct VoucherListRequest {
+    request: VoucherifyRequest,
 
     limit: u32,
     page: u32,
@@ -14,8 +14,8 @@ pub struct VoucherListRequest<'a> {
     campaign: String,
 }
 
-impl<'a> VoucherListRequest<'a> {
-    pub fn new(request: &'a VoucherifyRequest) -> VoucherListRequest<'a> {
+impl VoucherListRequest {
+    pub fn new(request: VoucherifyRequest) -> VoucherListRequest {
         VoucherListRequest {
             request: request,
             limit: 10,
@@ -25,32 +25,32 @@ impl<'a> VoucherListRequest<'a> {
         }
     }
 
-    pub fn limit(&mut self, limit: u32) -> &mut VoucherListRequest<'a> {
+    pub fn limit(&mut self, limit: u32) -> &mut VoucherListRequest {
         self.limit = limit;
         self
     }
 
-    pub fn page(&mut self, page: u32) -> &mut VoucherListRequest<'a> {
+    pub fn page(&mut self, page: u32) -> &mut VoucherListRequest {
         self.page = page;
         self
     }
 
-    pub fn category(&mut self, category: &str) -> &mut VoucherListRequest<'a> {
+    pub fn category(&mut self, category: &str) -> &mut VoucherListRequest {
         self.category = category.to_string();
         self
     }
 
-    pub fn campaign(&mut self, campaign: &str) -> &mut VoucherListRequest<'a> {
+    pub fn campaign(&mut self, campaign: &str) -> &mut VoucherListRequest {
         self.campaign = campaign.to_string();
         self
     }
 
-    pub fn send(&self) -> Result<Vec<Voucher>, String> {
+    pub fn send(&mut self) -> Result<Vec<Voucher>, String> {
         let mut url = Url::parse("https://api.voucherify.io/v1/vouchers").unwrap();
         url.query_pairs_mut()
-            .clear()
-            .append_pair("limit", format!("{}", self.limit).as_str())
-            .append_pair("page", format!("{}", self.page).as_str());
+           .clear()
+           .append_pair("limit", format!("{}", self.limit).as_str())
+           .append_pair("page", format!("{}", self.page).as_str());
 
         if !self.category.is_empty() {
             url.query_pairs_mut().append_pair("category", self.category.as_str());
@@ -60,7 +60,8 @@ impl<'a> VoucherListRequest<'a> {
             url.query_pairs_mut().append_pair("campaign", self.campaign.as_str());
         }
 
-        let mut response = match self.request.execute(url) {
+        let mut response = match self.request.get(url)
+                                             .execute() {
             Ok(r) => r,
             Err(err) => return Err(err.to_string()),
         };
@@ -73,7 +74,10 @@ impl<'a> VoucherListRequest<'a> {
 
         match serde_json::from_str(json.as_str()) {
             Ok(vouchers) => Ok(vouchers),
-            Err(_) => Err("Faile to parse JSON".to_string())
+            Err(err) => {
+                println!("{:?}", err);
+                Err("Failed to parse JSON".to_string())
+            }
         }
     }
 }

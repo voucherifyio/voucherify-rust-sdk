@@ -7,10 +7,13 @@ use hyper_native_tls::NativeTlsClient;
 pub struct VoucherifyRequest {
     client: Client,
     headers: Headers,
+    payload: String,
+    method: Method,
+    url: Url,
 }
 
 impl VoucherifyRequest {
-    pub fn new(api_key: &str, api_user: &str) -> VoucherifyRequest {
+    pub fn new(api_key: &String, api_user: &String) -> VoucherifyRequest {
         let ssl = NativeTlsClient::new().unwrap();
         let connector = HttpsConnector::new(ssl);
         let client = Client::with_connector(connector);
@@ -23,10 +26,47 @@ impl VoucherifyRequest {
         VoucherifyRequest {
             client: client,
             headers: headers,
+            payload: String::new(),
+            method: Method::Get,
+            url: Url::parse("https://api.voucherify.io/v1/vouchers").unwrap(),
         }
     }
 
-    pub fn execute(&self, url: Url) -> Result<Response, Error> {
-        self.client.get(url).headers(self.headers.clone()).send()
+    pub fn get(&mut self, url: Url) -> &mut VoucherifyRequest {
+        self.method = Method::Get;
+        self.url = url;
+        self
     }
+
+    pub fn post(&mut self, url: Url) -> &mut VoucherifyRequest {
+        self.method = Method::Post;
+        self.url = url;
+        self
+    }
+
+    pub fn payload(&mut self, payload: String) -> &mut VoucherifyRequest {
+        self.payload = payload;
+        self
+    }
+
+    pub fn execute(&self) -> Result<Response, Error> {
+        match self.method {
+            Method::Get => {
+                self.client.get(self.url.clone())
+                           .headers(self.headers.clone())
+                           .send()
+            },
+            Method::Post => {
+                self.client.post(self.url.clone())
+                           .body(self.payload.as_str())
+                           .headers(self.headers.clone())
+                           .send()
+            },
+        }
+    }
+}
+
+enum Method {
+    Get,
+    Post,
 }

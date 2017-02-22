@@ -9,25 +9,36 @@ pub mod request;
 pub mod voucher;
 
 use request::VoucherifyRequest;
+use voucher::create::VoucherCreateRequest;
 use voucher::get::VoucherGetRequest;
 use voucher::list::VoucherListRequest;
+use voucher::Voucher;
 
 pub struct Voucherify {
-    request: VoucherifyRequest,
+    api_key: String,
+    api_user: String,
 }
 
 impl Voucherify {
     pub fn new(key: &str, user: &str) -> Voucherify {
         Voucherify {
-            request: VoucherifyRequest::new(key, user),
+            api_key: key.to_string(),
+            api_user: user.to_string(),
         }
     }
 
+    pub fn voucher_create(&self, voucher: Voucher) -> VoucherCreateRequest {
+        let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
+        VoucherCreateRequest::new(new_request, voucher)
+    }
+
     pub fn voucher_get(&self, voucher_id: &str) -> VoucherGetRequest {
-        VoucherGetRequest::new(&self.request, voucher_id)
+        let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
+        VoucherGetRequest::new(new_request, voucher_id)
     }
 
     pub fn voucher_list(&self) -> VoucherListRequest {
-        VoucherListRequest::new(&self.request)
+        let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
+        VoucherListRequest::new(new_request)
     }
 }

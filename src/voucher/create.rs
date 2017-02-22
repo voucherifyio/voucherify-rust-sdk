@@ -5,28 +5,28 @@ use serde_json;
 use request::VoucherifyRequest;
 use voucher::Voucher;
 
-pub struct VoucherGetRequest {
+pub struct VoucherCreateRequest {
     request: VoucherifyRequest,
 
-    voucher_id: String,
+    voucher: Voucher,
 }
 
-impl VoucherGetRequest {
-    pub fn new(request: VoucherifyRequest, voucher_id: &str) -> VoucherGetRequest {
-        VoucherGetRequest {
+impl VoucherCreateRequest {
+    pub fn new(request: VoucherifyRequest, voucher: Voucher) -> VoucherCreateRequest {
+        VoucherCreateRequest {
             request: request,
 
-            voucher_id: voucher_id.to_string(),
+            voucher: voucher,
         }
     }
 
     pub fn send(&mut self) -> Result<Voucher, String> {
-        let url = match Url::parse(format!("{}/{}", "https://api.voucherify.io/v1/vouchers", self.voucher_id).as_str()) {
-            Ok(u) => u,
-            Err(_) => return Err("Invalid voucher Id".to_string()),
-        };
+        let url = Url::parse("https://api.voucherify.io/v1/vouchers").unwrap();
 
-        let mut response = match self.request.get(url)
+        let payload = serde_json::to_string(&self.voucher).unwrap();
+
+        let mut response = match self.request.post(url)
+                                             .payload(payload)
                                              .execute() {
             Ok(r) => r,
             Err(err) => return Err(err.to_string()),

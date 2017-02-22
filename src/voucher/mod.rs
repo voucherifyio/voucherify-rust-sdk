@@ -1,3 +1,4 @@
+pub mod create;
 pub mod get;
 pub mod list;
 
@@ -5,19 +6,61 @@ pub mod list;
 pub struct Voucher {
     object: Option<String>,
     created_at: Option<String>,
-    code: String,
-    campaign: String,
+    code: Option<String>,
+    campaign: Option<String>,
      #[serde(rename = "type")]
-    voucher_type: String,
-    is_referral_code: bool,
-    publish: Publish,
-    redemption: Redemption,
-    active: bool,
+    voucher_type: Option<VoucherType>,
+    is_referral_code: Option<bool>,
+    publish: Option<Publish>,
+    redemption: Option<Redemption>,
+    active: Option<bool>,
     metadata: Option<Metadata>,
     discount: Option<Discount>,
     gift: Option<Gift>,
-    assets: Assets,
+    assets: Option<Assets>,
     referrer_id: Option<String>,
+}
+
+impl Voucher {
+    pub fn new() -> Voucher {
+        Voucher {
+            object: None,
+            created_at: None,
+            code: None,
+            campaign: None,
+            voucher_type: None,
+            is_referral_code: None,
+            publish: None,
+            redemption: None,
+            active: None,
+            metadata: None,
+            discount: None,
+            gift: None,
+            assets: None,
+            referrer_id: None,
+        }
+    }
+
+    pub fn voucher_type(mut self, voucher_type: VoucherType) -> Voucher {
+        self.voucher_type = Some(voucher_type);
+        self
+    }
+
+    pub fn discount(mut self, discount_type: DiscountType, amount: u32) -> Voucher {
+        self.discount = Some(Discount::new(discount_type,  amount));
+        self
+    }
+
+    pub fn build(self) -> Voucher {
+        self
+    }
+}
+
+#[derive(Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
+#[allow(non_camel_case_types)]
+pub enum VoucherType {
+    DISCOUNT_VOUCHER,
+    GIFT_VOUCHER,
 }
 
 #[derive(Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
@@ -55,8 +98,24 @@ pub struct Metadata {
 #[derive(Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
 pub struct Discount {
      #[serde(rename = "type")]
-    discount_type: String,
+    discount_type: DiscountType,
     amount_off: u32,
+}
+
+impl Discount {
+    pub fn new(discount_type: DiscountType, amount: u32) -> Discount {
+        Discount {
+            discount_type: discount_type,
+            amount_off: amount,
+        }
+    }
+}
+
+#[derive(Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
+pub enum DiscountType {
+    AMOUNT,
+    PERCENT,
+    UNIT,
 }
 
 #[derive(Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
