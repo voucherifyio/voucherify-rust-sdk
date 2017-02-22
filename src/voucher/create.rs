@@ -23,7 +23,10 @@ impl VoucherCreateRequest {
     pub fn send(&mut self) -> Result<Voucher, String> {
         let url = Url::parse("https://api.voucherify.io/v1/vouchers").unwrap();
 
-        let payload = serde_json::to_string(&self.voucher).unwrap();
+        let payload = match serde_json::to_string(&self.voucher) {
+            Ok(p) => p,
+            Err(_) => return Err("Failed to parse object to JSON".to_string())
+        };
 
         let mut response = match self.request.post(url)
                                              .payload(payload)
