@@ -5,7 +5,7 @@ use serde_json;
 use serde_json::Value;
 
 use request::VoucherifyRequest;
-use voucher::Voucher;
+use voucher::{Voucher, Gift};
 
 pub struct VoucherUpdateRequest {
     request: VoucherifyRequest,
@@ -52,11 +52,10 @@ impl VoucherUpdateRequest {
         self
     }
 
-    //gift
-    //object
-
-    //gift.amount
-    //long
+    pub fn gift_amount(&mut self, amount: usize) -> &mut VoucherUpdateRequest {
+        self.voucher.gift = Some(Gift::new(amount, 0));
+        self
+    }
 
     pub fn send(&mut self) -> Result<Voucher, String> {
         let voucher_id = self.voucher.code.clone();
@@ -85,7 +84,10 @@ impl VoucherUpdateRequest {
 
         match serde_json::from_str(json.as_str()) {
             Ok(voucher) => Ok(voucher),
-            Err(_) => Err("Failed to parse JSON".to_string())
+            Err(err) => {
+                println!("{:?}", err);
+                Err("Failed to parse JSON".to_string())
+            }
         }
     }
 }

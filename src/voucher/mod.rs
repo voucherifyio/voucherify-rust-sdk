@@ -147,8 +147,17 @@ pub enum DiscountType {
 
 #[derive(Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
 pub struct Gift {
-    amount: u32,
-    balance: u32,
+    amount: usize,
+    balance: usize,
+}
+
+impl Gift {
+    pub fn new(amount: usize, balance: usize) -> Gift {
+        Gift {
+            amount: amount,
+            balance: balance,
+        }
+    }
 }
 
 #[derive(Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
