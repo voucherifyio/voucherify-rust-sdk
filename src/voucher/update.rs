@@ -1,6 +1,8 @@
 use std::io::Read;
+use std::collections::BTreeMap;
 use hyper::Url;
 use serde_json;
+use serde_json::Value;
 
 use request::VoucherifyRequest;
 use voucher::Voucher;
@@ -45,8 +47,10 @@ impl VoucherUpdateRequest {
         self
     }
 
-    //metadata
-    //object
+    pub fn metadata(&mut self, metadata: BTreeMap<String, Value>) -> &mut VoucherUpdateRequest {
+        self.voucher.metadata = Some(metadata);
+        self
+    }
 
     //gift
     //object
