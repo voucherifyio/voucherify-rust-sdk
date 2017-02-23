@@ -1,12 +1,11 @@
-#[macro_use]
-extern crate serde_derive;
-
+#[macro_use] extern crate serde_derive;
+extern crate serde_json;
 extern crate hyper;
 extern crate hyper_native_tls;
-extern crate serde_json;
 
 pub mod request;
 pub mod voucher;
+pub mod utils;
 
 use request::VoucherifyRequest;
 use voucher::create::VoucherCreateRequest;
