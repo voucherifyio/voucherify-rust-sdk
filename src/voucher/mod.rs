@@ -3,7 +3,10 @@ pub mod get;
 pub mod update;
 pub mod list;
 
-#[derive(Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
+use std::collections::BTreeMap;
+use serde_json::Value;
+
+#[derive(PartialEq, Debug, Serialize, Deserialize)]
 pub struct Voucher {
     object: Option<String>,
     created_at: Option<String>,
@@ -19,7 +22,7 @@ pub struct Voucher {
     redemption: Option<Redemption>,
     active: Option<bool>,
     additional_info: Option<String>,
-    metadata: Option<Metadata>,
+    metadata: Option<BTreeMap<String, Value>>,
     discount: Option<Discount>,
     gift: Option<Gift>,
     assets: Option<Assets>,
@@ -117,11 +120,6 @@ pub struct Redemption {
 #[derive(Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
 pub struct RedemptionEntry {
     id: String,
-}
-
-#[derive(Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
-pub struct Metadata {
-    test: bool,
 }
 
 #[derive(Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
