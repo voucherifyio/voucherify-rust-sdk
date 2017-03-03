@@ -1,6 +1,7 @@
 use std::io::Read;
 use std::collections::BTreeMap;
 use hyper::Url;
+use hyper::method::Method;
 use serde_json;
 use serde_json::Value;
 
@@ -59,19 +60,22 @@ impl VoucherUpdateRequest {
 
     pub fn send(&mut self) -> Result<Voucher, String> {
         let voucher_id = self.voucher.code.clone();
-        let url = match Url::parse(format!("{}/{}", "https://api.voucherify.io/v1/vouchers", voucher_id.unwrap()).as_str()) {
+        let url = match Url::parse(format!("{}/{}",
+                                           "https://api.voucherify.io/v1/vouchers",
+                                           voucher_id.unwrap())
+            .as_str()) {
             Ok(u) => u,
             Err(_) => return Err("Invalid voucher Id".to_string()),
         };
 
         let payload = match serde_json::to_string(&self.voucher) {
             Ok(p) => p,
-            Err(_) => return Err("Failed to parse object to JSON".to_string())
+            Err(_) => return Err("Failed to parse object to JSON".to_string()),
         };
 
-        let mut response = match self.request.put(url)
-                                             .payload(payload)
-                                             .execute() {
+        let mut response = match self.request
+            .payload(payload)
+            .execute(Method::Put, url) {
             Ok(r) => r,
             Err(err) => return Err(err.to_string()),
         };
