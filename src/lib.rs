@@ -11,6 +11,7 @@ use request::VoucherifyRequest;
 use voucher::create::VoucherCreateRequest;
 use voucher::get::VoucherGetRequest;
 use voucher::update::VoucherUpdateRequest;
+use voucher::delete::VoucherDeleteRequest;
 use voucher::list::VoucherListRequest;
 use voucher::Voucher;
 
@@ -40,6 +41,11 @@ impl Voucherify {
     pub fn voucher_update(&self, voucher_id: &str) -> VoucherUpdateRequest {
         let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
         VoucherUpdateRequest::new(new_request, voucher_id)
+    }
+
+    pub fn voucher_delete(&self, voucher_id: &str) -> VoucherDeleteRequest {
+        let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
+        VoucherDeleteRequest::new(new_request, voucher_id)
     }
 
     pub fn voucher_list(&self) -> VoucherListRequest {

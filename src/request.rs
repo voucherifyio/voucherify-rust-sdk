@@ -4,6 +4,13 @@ use hyper::net::HttpsConnector;
 use hyper::header::Headers;
 use hyper_native_tls::NativeTlsClient;
 
+enum Method {
+    Get,
+    Post,
+    Put,
+    Delete,
+}
+
 pub struct VoucherifyRequest {
     client: Client,
     headers: Headers,
@@ -50,6 +57,12 @@ impl VoucherifyRequest {
         self
     }
 
+    pub fn delete(&mut self, url: Url) -> &mut VoucherifyRequest {
+        self.method = Method::Delete;
+        self.url = url;
+        self
+    }
+
     pub fn payload(&mut self, payload: String) -> &mut VoucherifyRequest {
         self.payload = payload;
         self
@@ -74,12 +87,11 @@ impl VoucherifyRequest {
                            .headers(self.headers.clone())
                            .send()
             },
+            Method::Delete => {
+                self.client.delete(self.url.clone())
+                    .headers(self.headers.clone())
+                    .send()
+            },
         }
     }
-}
-
-enum Method {
-    Get,
-    Post,
-    Put,
 }
