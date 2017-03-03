@@ -1,3 +1,5 @@
+pub mod error;
+
 use std::collections::BTreeMap;
 use serde_json::Value;
 
