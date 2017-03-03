@@ -5,6 +5,7 @@ use serde_json;
 
 use request::VoucherifyRequest;
 use voucher::Voucher;
+use utils::error::VoucherifyError;
 
 pub struct VoucherGetRequest {
     request: VoucherifyRequest,
@@ -21,31 +22,20 @@ impl VoucherGetRequest {
         }
     }
 
-    pub fn send(&mut self) -> Result<Voucher, String> {
-        let url = match Url::parse(format!("{}/{}",
-                                           "https://api.voucherify.io/v1/vouchers",
-                                           self.voucher_id)
-            .as_str()) {
-            Ok(u) => u,
-            Err(_) => return Err("Invalid voucher Id".to_string()),
-        };
+    pub fn send(&mut self) -> Result<Voucher, VoucherifyError> {
+        let url = try!(Url::parse(format!("{}/{}",
+                                          "https://api.voucherify.io/v1/vouchers",
+                                          self.voucher_id)
+            .as_str()));
 
-        let mut response = match self.request.execute(Method::Get, url) {
-            Ok(r) => r,
-            Err(err) => return Err(err.to_string()),
-        };
-
-        println!("{:?}", response);
+        let mut response = try!(self.request.execute(Method::Get, url));
 
         let mut json = String::new();
-        match response.read_to_string(&mut json) {
-            Err(_) => return Err("Failed to read JSON from response".to_string()),
-            Ok(_) => (),
-        };
+        let _ = try!(response.read_to_string(&mut json));
 
         match serde_json::from_str(json.as_str()) {
             Ok(voucher) => Ok(voucher),
-            Err(_) => Err("Failed to parse JSON".to_string()),
+            Err(err) => Err(VoucherifyError::JsonParse(err)),
         }
     }
 }
