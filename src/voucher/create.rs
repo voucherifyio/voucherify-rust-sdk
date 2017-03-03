@@ -1,5 +1,6 @@
 use std::io::Read;
 use hyper::Url;
+use hyper::method::Method;
 use serde_json;
 
 use request::VoucherifyRequest;
@@ -25,12 +26,12 @@ impl VoucherCreateRequest {
 
         let payload = match serde_json::to_string(&self.voucher) {
             Ok(p) => p,
-            Err(_) => return Err("Failed to parse object to JSON".to_string())
+            Err(_) => return Err("Failed to parse object to JSON".to_string()),
         };
 
-        let mut response = match self.request.post(url)
-                                             .payload(payload)
-                                             .execute() {
+        let mut response = match self.request
+            .payload(payload)
+            .execute(Method::Post, url) {
             Ok(r) => r,
             Err(err) => return Err(err.to_string()),
         };
@@ -43,7 +44,7 @@ impl VoucherCreateRequest {
 
         match serde_json::from_str(json.as_str()) {
             Ok(voucher) => Ok(voucher),
-            Err(_) => Err("Failed to parse JSON".to_string())
+            Err(_) => Err("Failed to parse JSON".to_string()),
         }
     }
 }

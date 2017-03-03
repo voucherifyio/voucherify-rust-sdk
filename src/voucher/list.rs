@@ -1,5 +1,6 @@
 use std::io::Read;
 use hyper::Url;
+use hyper::method::Method;
 use serde_json;
 
 use request::VoucherifyRequest;
@@ -48,9 +49,9 @@ impl VoucherListRequest {
     pub fn send(&mut self) -> Result<Vec<Voucher>, String> {
         let mut url = Url::parse("https://api.voucherify.io/v1/vouchers").unwrap();
         url.query_pairs_mut()
-           .clear()
-           .append_pair("limit", format!("{}", self.limit).as_str())
-           .append_pair("page", format!("{}", self.page).as_str());
+            .clear()
+            .append_pair("limit", format!("{}", self.limit).as_str())
+            .append_pair("page", format!("{}", self.page).as_str());
 
         if !self.category.is_empty() {
             url.query_pairs_mut().append_pair("category", self.category.as_str());
@@ -60,8 +61,7 @@ impl VoucherListRequest {
             url.query_pairs_mut().append_pair("campaign", self.campaign.as_str());
         }
 
-        let mut response = match self.request.get(url)
-                                             .execute() {
+        let mut response = match self.request.execute(Method::Get, url) {
             Ok(r) => r,
             Err(err) => return Err(err.to_string()),
         };

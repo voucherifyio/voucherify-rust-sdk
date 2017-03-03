@@ -1,5 +1,5 @@
 use std::collections::BTreeMap;
-use serde_json::{Value};
+use serde_json::Value;
 
 pub struct Metadata {
     contents: BTreeMap<String, Value>,
@@ -7,9 +7,7 @@ pub struct Metadata {
 
 impl Metadata {
     pub fn new() -> Metadata {
-        Metadata {
-            contents: BTreeMap::new(),
-        }
+        Metadata { contents: BTreeMap::new() }
     }
 
     pub fn string(mut self, key: &str, value: &str) -> Metadata {

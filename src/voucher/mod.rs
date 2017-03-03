@@ -14,7 +14,7 @@ pub struct Voucher {
     code: Option<String>,
     campaign: Option<String>,
     category: Option<String>,
-     #[serde(rename = "type")]
+    #[serde(rename = "type")]
     voucher_type: Option<VoucherType>,
     is_referral_code: Option<bool>,
     start_date: Option<String>,
@@ -80,7 +80,7 @@ impl Voucher {
     }
 
     pub fn discount(mut self, discount_type: DiscountType, amount: u32) -> Voucher {
-        self.discount = Some(Discount::new(discount_type,  amount));
+        self.discount = Some(Discount::new(discount_type, amount));
         self
     }
 
@@ -125,7 +125,7 @@ pub struct RedemptionEntry {
 
 #[derive(Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
 pub struct Discount {
-     #[serde(rename = "type")]
+    #[serde(rename = "type")]
     discount_type: DiscountType,
     amount_off: u32,
 }
@@ -169,5 +169,5 @@ pub struct Assets {
 #[derive(Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
 pub struct QrCode {
     id: String,
-    url: String
+    url: String,
 }

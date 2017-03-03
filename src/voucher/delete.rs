@@ -1,4 +1,5 @@
 use hyper::Url;
+use hyper::method::Method;
 use hyper::status::StatusCode;
 
 use request::VoucherifyRequest;
@@ -10,7 +11,7 @@ pub struct VoucherDeleteRequest {
     voucher_id: String,
 }
 
-impl  VoucherDeleteRequest {
+impl VoucherDeleteRequest {
     pub fn new(request: VoucherifyRequest, voucher_id: &str) -> VoucherDeleteRequest {
         VoucherDeleteRequest {
             request: request,
@@ -26,7 +27,10 @@ impl  VoucherDeleteRequest {
     }
 
     pub fn send(&mut self) -> Result<bool, String> {
-        let mut url = match Url::parse(format!("{}/{}", "https://api.voucherify.io/v1/vouchers", self.voucher_id).as_str()) {
+        let mut url = match Url::parse(format!("{}/{}",
+                                               "https://api.voucherify.io/v1/vouchers",
+                                               self.voucher_id)
+            .as_str()) {
             Ok(u) => u,
             Err(_) => return Err("Invalid voucher Id".to_string()),
         };
@@ -35,15 +39,14 @@ impl  VoucherDeleteRequest {
             url.query_pairs_mut().append_pair("force", "true");
         }
 
-        let response = match self.request.delete(url)
-            .execute() {
-                Ok(r) => r,
-                Err(err) => return Err(err.to_string()),
-            };
+        let response = match self.request.execute(Method::Delete, url) {
+            Ok(r) => r,
+            Err(err) => return Err(err.to_string()),
+        };
 
         match response.status {
             StatusCode::Ok => Ok(true),
-            _ => Err("Something went wrong".to_string())
+            _ => Err("Something went wrong".to_string()),
         }
     }
 }
