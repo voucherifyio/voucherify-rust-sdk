@@ -1,8 +1,8 @@
 use hyper::Url;
 use hyper::method::Method;
-use hyper::status::StatusCode;
 
 use request::VoucherifyRequest;
+use utils::error::VoucherifyError;
 
 pub struct VoucherDeleteRequest {
     request: VoucherifyRequest,
@@ -26,27 +26,22 @@ impl VoucherDeleteRequest {
         self
     }
 
-    pub fn send(&mut self) -> Result<bool, String> {
-        let mut url = match Url::parse(format!("{}/{}",
+    pub fn send(&mut self) -> Result<bool, VoucherifyError> {
+        let mut url = try!(Url::parse(format!("{}/{}",
                                                "https://api.voucherify.io/v1/vouchers",
                                                self.voucher_id)
-            .as_str()) {
-            Ok(u) => u,
-            Err(_) => return Err("Invalid voucher Id".to_string()),
-        };
+            .as_str()));
 
         if self.force {
             url.query_pairs_mut().append_pair("force", "true");
         }
 
-        let response = match self.request.execute(Method::Delete, url) {
-            Ok(r) => r,
-            Err(err) => return Err(err.to_string()),
-        };
+        let response = try!(self.request.execute(Method::Delete, url));
 
-        match response.status {
-            StatusCode::Ok => Ok(true),
-            _ => Err("Something went wrong".to_string()),
+        if !response.status.is_success() {
+            return Err(VoucherifyError::ResponseError("Resource not found".to_string()))
         }
+
+        Ok(true)
     }
 }

@@ -4,6 +4,7 @@ use hyper::method::Method;
 use serde_json;
 
 use request::VoucherifyRequest;
+use utils::error::VoucherifyError;
 use voucher::Voucher;
 
 pub struct VoucherCreateRequest {
@@ -21,30 +22,23 @@ impl VoucherCreateRequest {
         }
     }
 
-    pub fn send(&mut self) -> Result<Voucher, String> {
-        let url = Url::parse("https://api.voucherify.io/v1/vouchers").unwrap();
+    pub fn send(&mut self) -> Result<Voucher, VoucherifyError> {
+        let url = try!(Url::parse("https://api.voucherify.io/v1/vouchers"));
 
-        let payload = match serde_json::to_string(&self.voucher) {
-            Ok(p) => p,
-            Err(_) => return Err("Failed to parse object to JSON".to_string()),
-        };
+        let payload = try!(serde_json::to_string(&self.voucher));
 
-        let mut response = match self.request
-            .payload(payload)
-            .execute(Method::Post, url) {
-            Ok(r) => r,
-            Err(err) => return Err(err.to_string()),
-        };
+        let mut response = try!(self.request.payload(payload).execute(Method::Post, url));
 
         let mut json = String::new();
-        match response.read_to_string(&mut json) {
-            Err(_) => return Err("Failed to read JSON from response".to_string()),
-            Ok(_) => (),
-        };
+        let _ = try!(response.read_to_string(&mut json));
+
+        if !response.status.is_success() {
+            return Err(VoucherifyError::ResponseError(json))
+        }
 
         match serde_json::from_str(json.as_str()) {
             Ok(voucher) => Ok(voucher),
-            Err(_) => Err("Failed to parse JSON".to_string()),
+            Err(err) => Err(VoucherifyError::JsonParse(err)),
         }
     }
 }

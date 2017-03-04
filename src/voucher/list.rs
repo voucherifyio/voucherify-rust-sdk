@@ -4,6 +4,7 @@ use hyper::method::Method;
 use serde_json;
 
 use request::VoucherifyRequest;
+use utils::error::VoucherifyError;
 use voucher::Voucher;
 
 pub struct VoucherListRequest {
@@ -46,8 +47,8 @@ impl VoucherListRequest {
         self
     }
 
-    pub fn send(&mut self) -> Result<Vec<Voucher>, String> {
-        let mut url = Url::parse("https://api.voucherify.io/v1/vouchers").unwrap();
+    pub fn send(&mut self) -> Result<Vec<Voucher>, VoucherifyError> {
+        let mut url = try!(Url::parse("https://api.voucherify.io/v1/vouchers"));
         url.query_pairs_mut()
             .clear()
             .append_pair("limit", format!("{}", self.limit).as_str())
@@ -61,23 +62,14 @@ impl VoucherListRequest {
             url.query_pairs_mut().append_pair("campaign", self.campaign.as_str());
         }
 
-        let mut response = match self.request.execute(Method::Get, url) {
-            Ok(r) => r,
-            Err(err) => return Err(err.to_string()),
-        };
+        let mut response = try!(self.request.execute(Method::Get, url));
 
         let mut json = String::new();
-        match response.read_to_string(&mut json) {
-            Err(_) => return Err("Failed to read JSON from response".to_string()),
-            Ok(_) => (),
-        };
+        let _ = try!(response.read_to_string(&mut json));
 
         match serde_json::from_str(json.as_str()) {
-            Ok(vouchers) => Ok(vouchers),
-            Err(err) => {
-                println!("{:?}", err);
-                Err("Failed to parse JSON".to_string())
-            }
+            Ok(voucher) => Ok(voucher),
+            Err(err) => Err(VoucherifyError::JsonParse(err)),
         }
     }
 }

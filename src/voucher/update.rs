@@ -6,6 +6,7 @@ use serde_json;
 use serde_json::Value;
 
 use request::VoucherifyRequest;
+use utils::error::VoucherifyError;
 use voucher::{Voucher, Gift};
 
 pub struct VoucherUpdateRequest {
@@ -58,40 +59,23 @@ impl VoucherUpdateRequest {
         self
     }
 
-    pub fn send(&mut self) -> Result<Voucher, String> {
+    pub fn send(&mut self) -> Result<Voucher, VoucherifyError> {
         let voucher_id = self.voucher.code.clone();
-        let url = match Url::parse(format!("{}/{}",
-                                           "https://api.voucherify.io/v1/vouchers",
-                                           voucher_id.unwrap())
-            .as_str()) {
-            Ok(u) => u,
-            Err(_) => return Err("Invalid voucher Id".to_string()),
-        };
+        let url = try!(Url::parse(format!("{}/{}",
+                                          "https://api.voucherify.io/v1/vouchers",
+                                          voucher_id.unwrap())
+            .as_str()));
 
-        let payload = match serde_json::to_string(&self.voucher) {
-            Ok(p) => p,
-            Err(_) => return Err("Failed to parse object to JSON".to_string()),
-        };
+        let payload = try!(serde_json::to_string(&self.voucher));
 
-        let mut response = match self.request
-            .payload(payload)
-            .execute(Method::Put, url) {
-            Ok(r) => r,
-            Err(err) => return Err(err.to_string()),
-        };
+        let mut response = try!(self.request.payload(payload).execute(Method::Put, url));
 
         let mut json = String::new();
-        match response.read_to_string(&mut json) {
-            Err(_) => return Err("Failed to read JSON from response".to_string()),
-            Ok(_) => (),
-        };
+        let _ = try!(response.read_to_string(&mut json));
 
         match serde_json::from_str(json.as_str()) {
             Ok(voucher) => Ok(voucher),
-            Err(err) => {
-                println!("{:?}", err);
-                Err("Failed to parse JSON".to_string())
-            }
+            Err(err) => Err(VoucherifyError::JsonParse(err)),
         }
     }
 }
