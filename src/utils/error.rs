@@ -7,6 +7,7 @@ pub enum VoucherifyError {
     Io(io::Error),
     UrlParse(error::ParseError),
     RequestError(error::Error),
+    ResponseError(String),
     JsonParse(serde_json::Error),
 }
 

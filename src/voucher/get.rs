@@ -4,8 +4,8 @@ use hyper::method::Method;
 use serde_json;
 
 use request::VoucherifyRequest;
-use voucher::Voucher;
 use utils::error::VoucherifyError;
+use voucher::Voucher;
 
 pub struct VoucherGetRequest {
     request: VoucherifyRequest,
@@ -32,6 +32,10 @@ impl VoucherGetRequest {
 
         let mut json = String::new();
         let _ = try!(response.read_to_string(&mut json));
+
+        if !response.status.is_success() {
+            return Err(VoucherifyError::ResponseError(json))
+        }
 
         match serde_json::from_str(json.as_str()) {
             Ok(voucher) => Ok(voucher),
