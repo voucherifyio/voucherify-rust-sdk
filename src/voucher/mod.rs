@@ -3,6 +3,8 @@ pub mod get;
 pub mod update;
 pub mod delete;
 pub mod list;
+pub mod enable;
+pub mod disable;
 
 use std::collections::BTreeMap;
 use serde_json::Value;
