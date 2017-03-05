@@ -15,6 +15,8 @@ use voucher::get::VoucherGetRequest;
 use voucher::update::VoucherUpdateRequest;
 use voucher::delete::VoucherDeleteRequest;
 use voucher::list::VoucherListRequest;
+use voucher::enable::VoucherEnableRequest;
+use voucher::disable::VoucherDisableRequest;
 use voucher::Voucher;
 
 pub struct Voucherify {
@@ -53,5 +55,17 @@ impl Voucherify {
     pub fn voucher_list(&self) -> VoucherListRequest {
         let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
         VoucherListRequest::new(new_request)
+    }
+
+    pub fn voucher_enable(&self, voucher_id: &str) -> VoucherEnableRequest {
+        let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
+        VoucherEnableRequest::new(new_request, voucher_id)
+
+    }
+
+    pub fn voucher_disable(&self, voucher_id: &str) -> VoucherDisableRequest {
+        let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
+        VoucherDisableRequest::new(new_request, voucher_id)
+
     }
 }
