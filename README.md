@@ -25,7 +25,6 @@ Methods are provided:
 - [List Vouchers](#list-vouchers)
 - [Enable Voucher](#enable-voucher)
 - [Disable Voucher](#disable-voucher)
-- [Import Vouchers](#import-vouchers)
 
 #### [Create Voucher]
 
@@ -35,14 +34,56 @@ let new_voucher = Voucher::new()
     .discount(DiscountType::AMOUNT, 20)
     .build();
 
-let returned_voucher = voucherify.voucher_create(new_voucher).send().unwrap();
+let created_voucher = voucherify.voucher_create(new_voucher).send().unwrap();
 ```
 
 #### [Get Voucher]
 
 ``` rust
-let single_voucher: Voucher = voucherify.voucher_get("yv5k3rFu").send().unwrap();
+let single_voucher: Voucher = voucherify.voucher_get("D1dsWQVE").send().unwrap();
 ```
+
+#### [Update Voucher]
+
+``` rust
+let updated_metadata = Metadata::new()
+    .number("number", 32)
+    .string("is", "working")
+    .boolean("is_amazing", true)
+    .build();
+
+let updated_voucher = voucherify.voucher_update("D1dsWQVE")
+                                .category("hello_world")
+                                .active(true)
+                                .metadata(updated_metadata)
+                                // .gift_amount(1234)
+                                .send().unwrap();
+```
+
+#### [Delete Voucher]
+
+``` rust
+let was_voucher_deleted: bool = voucherify.voucher_delete(created_voucher_code.as_str()).send().unwrap();
+```
+
+#### [List Vouchers]
+
+``` rust
+let voucher_list: Vec<Voucher> = voucherify.voucher_list().limit(19).page(1).send().unwrap();
+```
+
+#### [Enable Voucher]
+
+``` rust
+let was_voucher_enabled: bool = voucherify.voucher_enable("D1dsWQVE").send().unwrap();
+```
+
+#### [Disable Voucher]
+
+``` rust
+let was_voucher_disabled: bool = voucherify.voucher_disable("D1dsWQVE").send().unwrap();
+```
+
 [Create Voucher]: https://docs.voucherify.io/reference?utm_source=github&utm_medium=sdk&utm_campaign=acq#create-voucher
 [Get Voucher]: https://docs.voucherify.io/reference?utm_source=github&utm_medium=sdk&utm_campaign=acq#vouchers-get
 [Update Voucher]: https://docs.voucherify.io/reference?utm_source=github&utm_medium=sdk&utm_campaign=acq#update-voucher
