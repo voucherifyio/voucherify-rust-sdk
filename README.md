@@ -90,6 +90,10 @@ let was_voucher_enabled: bool = voucherify.voucher_enable("D1dsWQVE").send().unw
 let was_voucher_disabled: bool = voucherify.voucher_disable("D1dsWQVE").send().unwrap();
 ```
 
+## License
+
+Licensed under MIT license ([LICENSE](LICENSE) or http://opensource.org/licenses/MIT)
+
 [Create Voucher]: https://docs.voucherify.io/reference?utm_source=github&utm_medium=sdk&utm_campaign=acq#create-voucher
 [Get Voucher]: https://docs.voucherify.io/reference?utm_source=github&utm_medium=sdk&utm_campaign=acq#vouchers-get
 [Update Voucher]: https://docs.voucherify.io/reference?utm_source=github&utm_medium=sdk&utm_campaign=acq#update-voucher
