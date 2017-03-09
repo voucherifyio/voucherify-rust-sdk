@@ -11,25 +11,25 @@ use serde_json::Value;
 
 #[derive(PartialEq, Debug, Serialize, Deserialize)]
 pub struct Voucher {
-    object: Option<String>,
-    created_at: Option<String>,
-    code: Option<String>,
-    campaign: Option<String>,
-    category: Option<String>,
+    pub object: Option<String>,
+    pub created_at: Option<String>,
+    pub code: Option<String>,
+    pub campaign: Option<String>,
+    pub category: Option<String>,
     #[serde(rename = "type")]
-    voucher_type: Option<VoucherType>,
-    is_referral_code: Option<bool>,
-    start_date: Option<String>,
-    expiration_date: Option<String>,
-    publish: Option<Publish>,
-    redemption: Option<Redemption>,
-    active: Option<bool>,
-    additional_info: Option<String>,
-    metadata: Option<BTreeMap<String, Value>>,
-    discount: Option<Discount>,
-    gift: Option<Gift>,
-    assets: Option<Assets>,
-    referrer_id: Option<String>,
+    pub voucher_type: Option<VoucherType>,
+    pub is_referral_code: Option<bool>,
+    pub start_date: Option<String>,
+    pub expiration_date: Option<String>,
+    pub publish: Option<Publish>,
+    pub redemption: Option<Redemption>,
+    pub active: Option<bool>,
+    pub additional_info: Option<String>,
+    pub metadata: Option<BTreeMap<String, Value>>,
+    pub discount: Option<Discount>,
+    pub gift: Option<Gift>,
+    pub assets: Option<Assets>,
+    pub referrer_id: Option<String>,
 }
 
 impl Voucher {
@@ -128,8 +128,8 @@ pub struct RedemptionEntry {
 #[derive(Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
 pub struct Discount {
     #[serde(rename = "type")]
-    discount_type: DiscountType,
-    amount_off: u32,
+    pub discount_type: DiscountType,
+    pub amount_off: u32,
 }
 
 impl Discount {
