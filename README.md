@@ -1,7 +1,12 @@
 # voucherify-rust-sdk
 
-## API
-### Setup
+## Setup
+
+Add crate to your Cargo.toml
+``` toml
+[dependencies]
+voucherify-rs = "0.1.0"
+```
 
 Import voucherify-rs crate
 
@@ -16,8 +21,9 @@ let voucherify = Voucherify::new("<YOUR_APP_ID_GOES_HERE>",
                                  "<YOUR_SECRET_KEY_GOES_HERE>");
 ```
 
-### Vouchers API
-Methods are provided:
+## Vouchers API
+
+Provided methods:
 - [Create Voucher](#create-voucher)
 - [Get Voucher](#get-voucher)
 - [Update Voucher](#update-voucher)
@@ -26,7 +32,7 @@ Methods are provided:
 - [Enable Voucher](#enable-voucher)
 - [Disable Voucher](#disable-voucher)
 
-#### [Create Voucher]
+### [Create Voucher]
 
 ``` rust
 let new_voucher = Voucher::new()
@@ -37,13 +43,13 @@ let new_voucher = Voucher::new()
 let created_voucher = voucherify.voucher_create(new_voucher).send().unwrap();
 ```
 
-#### [Get Voucher]
+### [Get Voucher]
 
 ``` rust
 let single_voucher: Voucher = voucherify.voucher_get("D1dsWQVE").send().unwrap();
 ```
 
-#### [Update Voucher]
+### [Update Voucher]
 
 ``` rust
 let updated_metadata = Metadata::new()
@@ -60,25 +66,25 @@ let updated_voucher = voucherify.voucher_update("D1dsWQVE")
                                 .send().unwrap();
 ```
 
-#### [Delete Voucher]
+### [Delete Voucher]
 
 ``` rust
 let was_voucher_deleted: bool = voucherify.voucher_delete(created_voucher_code.as_str()).send().unwrap();
 ```
 
-#### [List Vouchers]
+### [List Vouchers]
 
 ``` rust
 let voucher_list: Vec<Voucher> = voucherify.voucher_list().limit(19).page(1).send().unwrap();
 ```
 
-#### [Enable Voucher]
+### [Enable Voucher]
 
 ``` rust
 let was_voucher_enabled: bool = voucherify.voucher_enable("D1dsWQVE").send().unwrap();
 ```
 
-#### [Disable Voucher]
+### [Disable Voucher]
 
 ``` rust
 let was_voucher_disabled: bool = voucherify.voucher_disable("D1dsWQVE").send().unwrap();
