@@ -136,9 +136,9 @@ impl Voucherify {
     ///
     /// let created_voucher_code = created_voucher.code.unwrap();
     ///
-    /// let was_voucher_deleted: bool = voucherify.voucher_delete(created_voucher_code.as_str()).send().unwrap();
+    /// let is_voucher_deleted: bool = voucherify.voucher_delete(created_voucher_code.as_str()).send().unwrap();
     ///
-    /// assert_eq!(was_voucher_deleted, true);
+    /// assert_eq!(is_voucher_deleted, true);
     /// ```
     pub fn voucher_delete(&self, voucher_id: &str) -> VoucherDeleteRequest {
         let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
@@ -176,9 +176,9 @@ impl Voucherify {
     /// let voucherify = Voucherify::new("c70a6f00-cf91-4756-9df5-47628850002b",
     ///                                  "3266b9f8-e246-4f79-bdf0-833929b1380c");
     ///
-    /// let was_voucher_enabled: bool = voucherify.voucher_enable("D1dsWQVE").send().unwrap();
+    /// let is_voucher_enabled: bool = voucherify.voucher_enable("D1dsWQVE").send().unwrap();
     ///
-    /// assert_eq!(was_voucher_enabled, true);
+    /// assert_eq!(is_voucher_enabled, true);
     /// ```
     pub fn voucher_enable(&self, voucher_id: &str) -> VoucherEnableRequest {
         let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
@@ -196,9 +196,9 @@ impl Voucherify {
     /// let voucherify = Voucherify::new("c70a6f00-cf91-4756-9df5-47628850002b",
     ///                                  "3266b9f8-e246-4f79-bdf0-833929b1380c");
     ///
-    /// let was_voucher_disabled: bool = voucherify.voucher_disable("D1dsWQVE").send().unwrap();
+    /// let is_voucher_disabled: bool = voucherify.voucher_disable("D1dsWQVE").send().unwrap();
     ///
-    /// assert_eq!(was_voucher_disabled, true);
+    /// assert_eq!(is_voucher_disabled, true);
     /// ```
     pub fn voucher_disable(&self, voucher_id: &str) -> VoucherDisableRequest {
         let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
