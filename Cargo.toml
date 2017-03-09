@@ -2,6 +2,12 @@
 name = "voucherify_rs"
 version = "0.1.0"
 authors = ["Mateusz 'Haggus' Mrowiec <matt.mrowiec@gmail.com>"]
+keywords = ["voucher", "voucherify", "api"]
+description = "Rust SDK for Voucherify.io"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/voucherifyio/voucherify-rust-sdk.git"
+homepage = "https://github.com/voucherifyio/voucherify-rust-sdk"
 
 [dependencies]
 hyper = "0.10.4"
