@@ -5,7 +5,7 @@
 Add crate to your Cargo.toml
 ``` toml
 [dependencies]
-voucherify-rs = "0.1.1"
+voucherify_rs = "0.1.1"
 ```
 
 Import voucherify-rs crate
