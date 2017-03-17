@@ -12,7 +12,7 @@ pub struct VoucherifyRequest {
 }
 
 impl VoucherifyRequest {
-    pub fn new(api_key: &String, api_user: &String) -> VoucherifyRequest {
+    pub fn new(api_key: &str, api_user: &str) -> VoucherifyRequest {
         let ssl = NativeTlsClient::new().unwrap();
         let connector = HttpsConnector::new(ssl);
         let client = Client::with_connector(connector);

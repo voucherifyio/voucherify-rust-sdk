@@ -9,7 +9,7 @@ pub mod disable;
 use std::collections::BTreeMap;
 use serde_json::Value;
 
-#[derive(PartialEq, Debug, Serialize, Deserialize)]
+#[derive(Default, PartialEq, Debug, Serialize, Deserialize)]
 pub struct Voucher {
     pub object: Option<String>,
     pub created_at: Option<String>,
@@ -34,26 +34,7 @@ pub struct Voucher {
 
 impl Voucher {
     pub fn new() -> Voucher {
-        Voucher {
-            object: None,
-            created_at: None,
-            code: None,
-            campaign: None,
-            category: None,
-            voucher_type: None,
-            is_referral_code: None,
-            start_date: None,
-            expiration_date: None,
-            publish: None,
-            redemption: None,
-            active: None,
-            additional_info: None,
-            metadata: None,
-            discount: None,
-            gift: None,
-            assets: None,
-            referrer_id: None,
-        }
+        Voucher::default()
     }
 
     pub fn code(mut self, code: String) -> Voucher {

@@ -3,13 +3,14 @@ pub mod error;
 use std::collections::BTreeMap;
 use serde_json::Value;
 
+#[derive(Default)]
 pub struct Metadata {
     contents: BTreeMap<String, Value>,
 }
 
 impl Metadata {
     pub fn new() -> Metadata {
-        Metadata { contents: BTreeMap::new() }
+        Metadata::default()
     }
 
     pub fn string(mut self, key: &str, value: &str) -> Metadata {
