@@ -9,21 +9,23 @@ use voucher::Voucher;
 
 pub struct VoucherCreateRequest {
     request: VoucherifyRequest,
+    app_url: String,
 
     voucher: Voucher,
 }
 
 impl VoucherCreateRequest {
-    pub fn new(request: VoucherifyRequest, voucher: Voucher) -> VoucherCreateRequest {
+    pub fn new(request: VoucherifyRequest, voucher: Voucher, app_url: String) -> VoucherCreateRequest {
         VoucherCreateRequest {
             request: request,
+            app_url: app_url,
 
             voucher: voucher,
         }
     }
 
     pub fn send(&mut self) -> Result<Voucher, VoucherifyError> {
-        let url = try!(Url::parse("https://api.voucherify.io/v1/vouchers"));
+        let url = try!(Url::parse(format!("{}/v1/vouchers", self.app_url).as_str()));
 
         let payload = try!(serde_json::to_string(&self.voucher));
 

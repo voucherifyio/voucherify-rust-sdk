@@ -6,15 +6,17 @@ use utils::error::VoucherifyError;
 
 pub struct VoucherDeleteRequest {
     request: VoucherifyRequest,
+    app_url: String,
 
     force: bool,
     voucher_id: String,
 }
 
 impl VoucherDeleteRequest {
-    pub fn new(request: VoucherifyRequest, voucher_id: &str) -> VoucherDeleteRequest {
+    pub fn new(request: VoucherifyRequest, voucher_id: &str, app_url: String) -> VoucherDeleteRequest {
         VoucherDeleteRequest {
             request: request,
+            app_url: app_url,
 
             force: false,
             voucher_id: voucher_id.to_string(),
@@ -27,9 +29,9 @@ impl VoucherDeleteRequest {
     }
 
     pub fn send(&mut self) -> Result<bool, VoucherifyError> {
-        let mut url = try!(Url::parse(format!("{}/{}",
-                                               "https://api.voucherify.io/v1/vouchers",
-                                               self.voucher_id)
+        let mut url = try!(Url::parse(format!("{}/v1/vouchers/{}",
+                                              self.app_url,
+                                              self.voucher_id)
             .as_str()));
 
         if self.force {
@@ -39,7 +41,7 @@ impl VoucherDeleteRequest {
         let response = try!(self.request.execute(Method::Delete, url));
 
         if !response.status.is_success() {
-            return Err(VoucherifyError::ResponseError("Resource not found".to_string()))
+            return Err(VoucherifyError::ResponseError("Resource not found".to_string()));
         }
 
         Ok(true)

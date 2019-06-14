@@ -12,16 +12,16 @@ pub struct VoucherifyRequest {
 }
 
 impl VoucherifyRequest {
-    pub fn new(api_key: &str, api_user: &str) -> VoucherifyRequest {
+    pub fn new(app_id: &str, app_token: &str) -> VoucherifyRequest {
         let ssl = NativeTlsClient::new().unwrap();
         let connector = HttpsConnector::new(ssl);
         let client = Client::with_connector(connector);
 
         let mut headers = Headers::new();
         headers.set_raw("X-App-Id",
-                        vec![api_key.to_string().bytes().collect::<Vec<_>>()]);
+                        vec![app_id.to_string().bytes().collect::<Vec<_>>()]);
         headers.set_raw("X-App-Token",
-                        vec![api_user.to_string().bytes().collect::<Vec<_>>()]);
+                        vec![app_token.to_string().bytes().collect::<Vec<_>>()]);
         headers.set_raw("Content-Type", vec![b"application/json".to_vec()]);
 
         VoucherifyRequest {

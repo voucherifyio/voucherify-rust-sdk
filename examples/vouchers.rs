@@ -1,7 +1,7 @@
 extern crate voucherify_rs;
 
 use voucherify_rs::Voucherify;
-use voucherify_rs::voucher::{Voucher, VoucherType, DiscountType};
+use voucherify_rs::voucher::{VouchersList, Voucher, VoucherType, DiscountType};
 use voucherify_rs::utils::Metadata;
 
 fn main() {
@@ -11,7 +11,6 @@ fn main() {
     //
     let voucherify = Voucherify::new("c70a6f00-cf91-4756-9df5-47628850002b",
                                      "3266b9f8-e246-4f79-bdf0-833929b1380c");
-
 
     //
     // Crate a voucher object
@@ -23,7 +22,7 @@ fn main() {
 
     // Request voucher to be created
     let created_voucher: Voucher = voucherify.voucher_create(new_voucher).send().unwrap();
-    println!("{:?}", created_voucher);
+    println!("Created voucher: {:?}", created_voucher);
 
     // Voucherify API returns the voucher it just created
     let created_voucher_code = created_voucher.code.unwrap();
@@ -33,7 +32,7 @@ fn main() {
     // Get voucher
     //
     let single_voucher: Voucher = voucherify.voucher_get(created_voucher_code.as_str()).send().unwrap();
-    println!("{:?}", single_voucher);
+    println!("Fetched voucher: {:?}", single_voucher);
 
 
     //
@@ -52,7 +51,7 @@ fn main() {
                                     .active(true)
                                     .metadata(updated_metadata)
                                     .send().unwrap();
-    println!("{:?}", updated_voucher);
+    println!("Updated voucher: {:?}", updated_voucher);
 
 
     //
@@ -65,8 +64,8 @@ fn main() {
     //
     // List vouchers
     //
-    let voucher_list: Vec<Voucher> = voucherify.voucher_list().limit(3).page(1).send().unwrap();
-    println!("{:?}", voucher_list);
+    let voucher_list: VouchersList = voucherify.voucher_list().limit(3).page(1).send().unwrap();
+    println!("Vouchers list: {:?}", voucher_list);
 
 
     //

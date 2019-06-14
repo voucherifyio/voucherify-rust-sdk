@@ -11,14 +11,16 @@ use voucher::{Voucher, Gift};
 
 pub struct VoucherUpdateRequest {
     request: VoucherifyRequest,
+    app_url: String,
 
     voucher: Voucher,
 }
 
 impl VoucherUpdateRequest {
-    pub fn new(request: VoucherifyRequest, voucher_id: &str) -> VoucherUpdateRequest {
+    pub fn new(request: VoucherifyRequest, voucher_id: &str, app_url: String) -> VoucherUpdateRequest {
         VoucherUpdateRequest {
             request: request,
+            app_url: app_url,
 
             voucher: Voucher::new().code(voucher_id.to_string()).build(),
         }
@@ -61,8 +63,8 @@ impl VoucherUpdateRequest {
 
     pub fn send(&mut self) -> Result<Voucher, VoucherifyError> {
         let voucher_id = self.voucher.code.clone();
-        let url = try!(Url::parse(format!("{}/{}",
-                                          "https://api.voucherify.io/v1/vouchers",
+        let url = try!(Url::parse(format!("{}/v1/vouchers/{}",
+                                          self.app_url,
                                           voucher_id.unwrap())
             .as_str()));
 

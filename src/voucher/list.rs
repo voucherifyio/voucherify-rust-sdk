@@ -1,14 +1,14 @@
 use std::io::Read;
 use hyper::Url;
 use hyper::method::Method;
-use serde_json;
 
 use request::VoucherifyRequest;
 use utils::error::VoucherifyError;
-use voucher::Voucher;
+use voucher::VouchersList;
 
 pub struct VoucherListRequest {
     request: VoucherifyRequest,
+    app_url: String,
 
     limit: u32,
     page: u32,
@@ -17,9 +17,11 @@ pub struct VoucherListRequest {
 }
 
 impl VoucherListRequest {
-    pub fn new(request: VoucherifyRequest) -> VoucherListRequest {
+    pub fn new(request: VoucherifyRequest, app_url: String) -> VoucherListRequest {
         VoucherListRequest {
             request: request,
+            app_url: app_url,
+
             limit: 10,
             page: 1,
             category: String::new(),
@@ -47,8 +49,8 @@ impl VoucherListRequest {
         self
     }
 
-    pub fn send(&mut self) -> Result<Vec<Voucher>, VoucherifyError> {
-        let mut url = try!(Url::parse("https://api.voucherify.io/v1/vouchers"));
+    pub fn send(&mut self) -> Result<VouchersList, VoucherifyError> {
+        let mut url = try!(Url::parse(format!("{}/v1/vouchers", self.app_url).as_str()));
         url.query_pairs_mut()
             .clear()
             .append_pair("limit", format!("{}", self.limit).as_str())
