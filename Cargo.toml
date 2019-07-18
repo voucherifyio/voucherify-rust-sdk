@@ -1,6 +1,6 @@
 [package]
 name = "voucherify_rs"
-version = "0.2.0"
+version = "1.0.0"
 authors = ["Mateusz 'Haggus' Mrowiec <matt.mrowiec@gmail.com>"]
 keywords = ["voucher", "voucherify", "api"]
 description = "Rust SDK for Voucherify.io"
