@@ -7,22 +7,24 @@ use utils::error::VoucherifyError;
 
 pub struct VoucherEnableRequest {
     request: VoucherifyRequest,
+    app_url: String,
 
     voucher_id: String,
 }
 
 impl VoucherEnableRequest {
-    pub fn new(request: VoucherifyRequest, voucher_id: &str) -> VoucherEnableRequest {
+    pub fn new(request: VoucherifyRequest, voucher_id: &str, app_url: String) -> VoucherEnableRequest {
         VoucherEnableRequest {
             request: request,
+            app_url: app_url,
 
             voucher_id: voucher_id.to_string(),
         }
     }
 
     pub fn send(&mut self) -> Result<bool, VoucherifyError> {
-        let url = try!(Url::parse(format!("{}/{}/enable",
-                                          "https://api.voucherify.io/v1/vouchers",
+        let url = try!(Url::parse(format!("{}/v1/vouchers/{}/enable",
+                                          self.app_url,
                                           self.voucher_id)
             .as_str()));
 

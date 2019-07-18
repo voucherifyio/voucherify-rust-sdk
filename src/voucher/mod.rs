@@ -10,6 +10,11 @@ use std::collections::BTreeMap;
 use serde_json::Value;
 
 #[derive(Default, PartialEq, Debug, Serialize, Deserialize)]
+pub struct VouchersList {
+    pub vouchers: Vec<Voucher>
+}
+
+#[derive(Default, PartialEq, Debug, Serialize, Deserialize)]
 pub struct Voucher {
     pub object: Option<String>,
     pub created_at: Option<String>,
@@ -82,7 +87,7 @@ pub enum VoucherType {
 #[derive(Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
 pub struct Publish {
     count: u32,
-    entries: Vec<PublishEntry>,
+    entries: Option<Vec<PublishEntry>>,
 }
 
 #[derive(Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
@@ -96,7 +101,7 @@ pub struct PublishEntry {
 #[derive(Hash, Eq, PartialEq, Debug, Serialize, Deserialize)]
 pub struct Redemption {
     redeemed_quantity: u32,
-    redemption_entries: Vec<RedemptionEntry>,
+    redemption_entries: Option<Vec<RedemptionEntry>>,
     redeemed_amount: Option<u32>,
     quantity: Option<u32>,
 }
@@ -110,14 +115,24 @@ pub struct RedemptionEntry {
 pub struct Discount {
     #[serde(rename = "type")]
     pub discount_type: DiscountType,
-    pub amount_off: u32,
+    pub amount_off: Option<u32>,
+    pub percent_off: Option<u32>
 }
 
 impl Discount {
     pub fn new(discount_type: DiscountType, amount: u32) -> Discount {
+        if discount_type == DiscountType::PERCENT {
+            return Discount {
+                discount_type: discount_type,
+                amount_off: None,
+                percent_off: Some(amount)
+            }
+        }
+
         Discount {
             discount_type: discount_type,
-            amount_off: amount,
+            amount_off: Some(amount),
+            percent_off: None
         }
     }
 }

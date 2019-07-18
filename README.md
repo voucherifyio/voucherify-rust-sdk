@@ -5,7 +5,7 @@
 Add crate to your Cargo.toml
 ``` toml
 [dependencies]
-voucherify_rs = "0.1.1"
+voucherify_rs = "0.2.0"
 ```
 
 Import voucherify-rs crate
@@ -19,6 +19,17 @@ Create voucherify api object
 ``` rust
 let voucherify = Voucherify::new("<YOUR_APP_ID_GOES_HERE>",
                                  "<YOUR_SECRET_KEY_GOES_HERE>");
+```
+
+### API Endpoint
+
+Optionally, you can specify API Endpoint if you want to use Voucherify running in a specific region.
+
+``` rust
+let voucherify: &mut Voucherify = &mut Voucherify::new("<YOUR_APP_ID_GOES_HERE>",
+                                                       "<YOUR_SECRET_KEY_GOES_HERE>");
+
+voucherify.set_endpoint("https://<region>.api.voucherify.io");
 ```
 
 ## Vouchers API

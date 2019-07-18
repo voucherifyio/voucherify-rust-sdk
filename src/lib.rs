@@ -19,17 +19,25 @@ use voucher::enable::VoucherEnableRequest;
 use voucher::disable::VoucherDisableRequest;
 use voucher::Voucher;
 
+const API_URL: &str = "https://api.voucherify.io";
+
 pub struct Voucherify {
-    api_key: String,
-    api_user: String,
+    app_id: String,
+    app_token: String,
+    app_url: String
 }
 
 impl Voucherify {
-    pub fn new(key: &str, user: &str) -> Voucherify {
+    pub fn new(app_id: &str, app_token: &str) -> Voucherify {
         Voucherify {
-            api_key: key.to_string(),
-            api_user: user.to_string(),
+            app_id: app_id.to_string(),
+            app_token: app_token.to_string(),
+            app_url: API_URL.to_string()
         }
+    }
+
+    pub fn set_endpoint(&mut self, app_url: &str) {
+        self.app_url = app_url.to_string();
     }
 
     /// Creates a voucher
@@ -53,8 +61,8 @@ impl Voucherify {
     /// assert_eq!(created_voucher.discount.unwrap().amount_off, 20);
     /// ```
     pub fn voucher_create(&self, voucher: Voucher) -> VoucherCreateRequest {
-        let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
-        VoucherCreateRequest::new(new_request, voucher)
+        let new_request = VoucherifyRequest::new(&self.app_id, &self.app_token);
+        VoucherCreateRequest::new(new_request, voucher, self.app_url.to_string())
     }
 
     /// Gets single voucher by id.
@@ -73,8 +81,8 @@ impl Voucherify {
     /// assert_eq!(single_voucher.code.unwrap(), "D1dsWQVE");
     /// ```
     pub fn voucher_get(&self, voucher_id: &str) -> VoucherGetRequest {
-        let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
-        VoucherGetRequest::new(new_request, voucher_id)
+        let new_request = VoucherifyRequest::new(&self.app_id, &self.app_token);
+        VoucherGetRequest::new(new_request, voucher_id, self.app_url.to_string())
     }
 
     /// Updates voucher by id.
@@ -105,8 +113,8 @@ impl Voucherify {
     /// assert_eq!(updated_voucher.category.unwrap(), "hello_world");
     /// ```
     pub fn voucher_update(&self, voucher_id: &str) -> VoucherUpdateRequest {
-        let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
-        VoucherUpdateRequest::new(new_request, voucher_id)
+        let new_request = VoucherifyRequest::new(&self.app_id, &self.app_token);
+        VoucherUpdateRequest::new(new_request, voucher_id, self.app_url.to_string())
     }
 
     /// Deletes voucher by id.
@@ -141,8 +149,8 @@ impl Voucherify {
     /// assert_eq!(is_voucher_deleted, true);
     /// ```
     pub fn voucher_delete(&self, voucher_id: &str) -> VoucherDeleteRequest {
-        let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
-        VoucherDeleteRequest::new(new_request, voucher_id)
+        let new_request = VoucherifyRequest::new(&self.app_id, &self.app_token);
+        VoucherDeleteRequest::new(new_request, voucher_id, self.app_url.to_string())
     }
 
     /// Gets a list of vouchers.
@@ -161,8 +169,8 @@ impl Voucherify {
     /// assert!(voucher_list.len() <= 19);
     /// ```
     pub fn voucher_list(&self) -> VoucherListRequest {
-        let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
-        VoucherListRequest::new(new_request)
+        let new_request = VoucherifyRequest::new(&self.app_id, &self.app_token);
+        VoucherListRequest::new(new_request, self.app_url.to_string())
     }
 
     /// Enables voucher by id.
@@ -181,8 +189,8 @@ impl Voucherify {
     /// assert_eq!(is_voucher_enabled, true);
     /// ```
     pub fn voucher_enable(&self, voucher_id: &str) -> VoucherEnableRequest {
-        let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
-        VoucherEnableRequest::new(new_request, voucher_id)
+        let new_request = VoucherifyRequest::new(&self.app_id, &self.app_token);
+        VoucherEnableRequest::new(new_request, voucher_id, self.app_url.to_string())
     }
 
     /// Disables voucher by id.
@@ -201,7 +209,7 @@ impl Voucherify {
     /// assert_eq!(is_voucher_disabled, true);
     /// ```
     pub fn voucher_disable(&self, voucher_id: &str) -> VoucherDisableRequest {
-        let new_request = VoucherifyRequest::new(&self.api_key, &self.api_user);
-        VoucherDisableRequest::new(new_request, voucher_id)
+        let new_request = VoucherifyRequest::new(&self.app_id, &self.app_token);
+        VoucherDisableRequest::new(new_request, voucher_id, self.app_url.to_string())
     }
 }
