@@ -112,3 +112,7 @@ Licensed under MIT license ([LICENSE](LICENSE) or http://opensource.org/licenses
 [List Vouchers]: https://docs.voucherify.io/reference?utm_source=github&utm_medium=sdk&utm_campaign=acq#list-vouchers
 [Enable Voucher]: https://docs.voucherify.io/reference?utm_source=github&utm_medium=sdk&utm_campaign=acq#enable-voucher
 [Disable Voucher]: https://docs.voucherify.io/reference?utm_source=github&utm_medium=sdk&utm_campaign=acq#disable-voucher
+
+## Changelog
+- **2019-06-19** - `1.0.0` - Added support for custom API endpoint, that allows to connect to projects created in specific Voucherify region.
+                             Additionally, updated the model here and there (more Option-al variables + added simple VouchersList).
