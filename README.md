@@ -101,9 +101,30 @@ let was_voucher_enabled: bool = voucherify.voucher_enable("D1dsWQVE").send().unw
 let was_voucher_disabled: bool = voucherify.voucher_disable("D1dsWQVE").send().unwrap();
 ```
 
+## Async Actions API
+
+Provided methods:
+- [Get Async Actions](#get-async-action)
+- [List Async Actions](#list-async-actions)
+
+#### [Get Async Action]
+
+``` rust
+let async_action: AsyncAction = voucherify.async_action_get("id").send().unwrap();
+```
+
+#### [List Async Actions]
+
+``` rust
+let async_action_list: Vec<AsyncAction> = voucherify.async_action_list().limit(5).end_date("2021-07-16T16:10:28Z").send().unwrap();
+```
+
 ## License
 
 Licensed under MIT license ([LICENSE](LICENSE) or http://opensource.org/licenses/MIT)
+
+[Get Async Action]: https://docs.voucherify.io/reference?utm_source=github&utm_medium=sdk&utm_campaign=acq#get-async-actions-1
+[List Async Actions]: https://docs.voucherify.io/reference?utm_source=github&utm_medium=sdk&utm_campaign=acq#list-async-actions
 
 [Create Voucher]: https://docs.voucherify.io/reference?utm_source=github&utm_medium=sdk&utm_campaign=acq#create-voucher
 [Get Voucher]: https://docs.voucherify.io/reference?utm_source=github&utm_medium=sdk&utm_campaign=acq#vouchers-get
