@@ -6,9 +6,12 @@ extern crate hyper;
 extern crate hyper_native_tls;
 
 pub mod request;
+pub mod async_action;
 pub mod voucher;
 pub mod utils;
 
+use async_action::get::AsyncActionGetRequest;
+use async_action::list::AsyncActionListRequest;
 use request::VoucherifyRequest;
 use voucher::create::VoucherCreateRequest;
 use voucher::get::VoucherGetRequest;
@@ -212,4 +215,45 @@ impl Voucherify {
         let new_request = VoucherifyRequest::new(&self.app_id, &self.app_token);
         VoucherDisableRequest::new(new_request, voucher_id, self.app_url.to_string())
     }
+
+    /// Gets single Async Action by id.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use voucherify_rs::Voucherify;
+    /// use voucherify_rs::voucher::AsyncAction;
+    ///
+    /// let voucherify = Voucherify::new("c70a6f00-cf91-4756-9df5-47628850002b",
+    ///                                  "3266b9f8-e246-4f79-bdf0-833929b1380c");
+    ///
+    /// let async_action: AsyncAction = voucherify.async_action_get("id").send().unwrap();
+    ///
+    /// assert_eq!(async_action.id.unwrap(), "id");
+    /// ```
+    pub fn async_action_get(&self, id: &str) -> AsyncActionGetRequest {
+        let new_request = VoucherifyRequest::new(&self.app_id, &self.app_token);
+        AsyncActionGetRequest::new(new_request, id, self.app_url.to_string())
+    }
+
+    /// Gets a list of Async Actions.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use voucherify_rs::Voucherify;
+    /// use voucherify_rs::voucher::AsyncAction;
+    ///
+    /// let voucherify = Voucherify::new("c70a6f00-cf91-4756-9df5-47628850002b",
+    ///                                  "3266b9f8-e246-4f79-bdf0-833929b1380c");
+    ///
+    /// let async_action_list: Vec<AsyncAction> = voucherify.async_action_list().limit(5).endDate("2021-07-16T16:10:28Z").send().unwrap();
+    ///
+    /// assert!(async_action_list.len() <= 5);
+    /// ```
+    pub fn async_action_list(&self) -> AsyncActionListRequest {
+        let new_request = VoucherifyRequest::new(&self.app_id, &self.app_token);
+        AsyncActionListRequest::new(new_request, self.app_url.to_string())
+    }
+
 }
